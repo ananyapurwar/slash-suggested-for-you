@@ -73,6 +73,7 @@ def get_suggested_experiences(user_id, k=5):
     Excludes already liked/viewed experiences. Returns a list of dicts with experience info.
     """
     # 1. Get all liked (wishlisted) and viewed experience IDs
+    # wish list / saved / liked from swipes 
     wish_q = supabase_client.table("wishlists").select("experience_id").eq("user_id", user_id).execute()
     viewed_q = supabase_client.table("viewed_experiences").select("experience_id").eq("user_id", user_id).execute()
     wish_ids = set([row["experience_id"] for row in (wish_q.data or [])])
