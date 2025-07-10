@@ -1,2 +1,12 @@
 .env
 **/.env
+# Virtual environments
+slash/
+myenv/
+path/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+.DS_Store
