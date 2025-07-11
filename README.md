@@ -1,25 +1,23 @@
-# Slash RAG Agent
+# Slash Suggested For You
 
-This project is a personalized experience gift suggestion agent. It uses a Retrieval Augmented Generation (RAG) architecture to provide tailored gift recommendations based on user input. The agent interacts with users through a conversational interface, asking a series of questions to understand the recipient's preferences, the occasion, and the user's budget.
+This project is an AI-powered experience recommendation system that suggests personalized experiences to users based on their wishlist and viewing history. It uses Groq's LLM to analyze user preferences and find semantically similar experiences, providing intelligent recommendations through a FastAPI server.
 
 ## Features
 
-- **Conversational AI:** Engages users in a natural conversation to gather information.
-- **Personalized Suggestions:** Provides gift ideas tailored to the recipient's interests.
-- **RAG Architecture:** Utilizes a Qdrant vector database to retrieve relevant experiences and Groq for generating responses.
-- **Session Management:** Supports multiple users with session tracking.
-- **Supabase Integration:** Persists session data in a Supabase database.
-- **FastAPI Server:** Exposes the agent's functionality through a RESTful API.
+- **AI-Powered Recommendations**: Uses Groq's LLM to analyze user preferences and find semantically similar experiences
+- **Personalized Suggestions**: Provides experience recommendations based on user's wishlist and viewing history
+- **Smart Tag Matching**: Uses LLM to find semantically similar tags and categories
+- **FastAPI Server**: Exposes the recommendation functionality through a RESTful API
+- **Supabase Integration**: Connects to Supabase database for user data and experience information
+- **Session Management**: Supports multiple users with individual recommendation tracking
 
 ## How It Works
 
-1.  **Initiation:** The user starts a session by sending a request to the `/init` endpoint.
-2.  **Questioning:** The agent asks a series of questions to gather context about the gift recipient.
-3.  **Answer Submission:** The user submits answers to the questions.
-4.  **Context Building:** The agent builds a context profile based on the user's answers.
-5.  **Suggestion Generation:** The agent uses the context to query the Qdrant vector database for relevant experiences.
-6.  **Response Generation:** The retrieved experiences are fed to the Groq language model to generate a final, user-friendly suggestion.
-7.  **Follow-up:** The user can ask follow-up questions to refine the suggestions.
+1. **User History Analysis**: Analyzes the user's wishlisted and viewed experiences
+2. **Tag Extraction**: Extracts relevant tags and categories from user's experience history
+3. **Semantic Matching**: Uses Groq LLM to find semantically similar tags and experiences
+4. **Intelligent Ranking**: Ranks experiences by relevance to user preferences using AI
+5. **Personalized Results**: Returns top-k most relevant experiences, excluding already seen ones
 
 ## Getting Started
 
@@ -31,38 +29,34 @@ This project is a personalized experience gift suggestion agent. It uses a Retri
 
 ### Installation
 
-1.  **Clone the repository:**
+1. **Clone the repository:**
 
-    ```bash
-    git clone https://github.com/your-username/slash-rag-agent.git
-    cd slash-rag-agent
-    ```
+   ```bash
+   git clone https://github.com/ananyapurwar/slash-suggested-for-you.git
+   cd slash-suggested-for-you
+   ```
 
-2.  **Create and activate a virtual environment:**
+2. **Create and activate a virtual environment:**
 
-    ```bash
-    python -m venv slash
-    source slash/bin/activate
-    ```
+   ```bash
+   python -m venv slash
+   source slash/bin/activate  # On Windows: slash\Scripts\activate
+   ```
 
-3.  **Install the dependencies:**
+3. **Install the dependencies:**
 
-    ```bash
-    pip install -r requirements.txt
-    ```
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-4.  **Set up environment variables:**
-    Create a `.env` file in the root of the project and add the following variables:
+4. **Set up environment variables:**
+   Create a `.env` file in the root of the project and add the following variables:
 
-    ```
-    GROQ_API_KEY="your_groq_api_key"
-    AZURE_OPENAI_API_KEY="your_azure_openai_api_key"
-    AZURE_OPENAI_ENDPOINT="your_azure_openai_endpoint"
-    QDRANT_API_KEY="your_qdrant_api_key"
-    QDRANT_HOST="your_qdrant_host"
-    SUPABASE_URL="your_supabase_url"
-    SUPABASE_KEY="your_supabase_key"
-    ```
+   ```
+   GROQ_API_KEY="your_groq_api_key"
+   SUPABASE_URL="your_supabase_url"
+   SUPABASE_SERVICE_ROLE_KEY="your_supabase_service_role_key"
+   ```
 
 ## Usage
 
@@ -78,48 +72,61 @@ The API will be available at `http://127.0.0.1:8000`.
 
 ### API Endpoints
 
-- `GET /init`: Initializes a new session and returns the first question.
-- `POST /submit`: Submits an answer to the current question.
-- `GET /next`: Retrieves the next question in the sequence.
-- `GET /suggestion`: Gets gift suggestions based on the current context.
-- `GET /context`: Returns the current session's context.
-- `GET /back`: Goes back to the previous question.
-- `GET /reset`: Resets the current session.
-- `GET /clear-all`: Clears all session data.
-- `GET /sessions`: Lists all active sessions.
-- `GET /followup`: Asks a follow-up question to get more refined suggestions.
+- `GET /`: Root endpoint with API information
+- `GET /suggested?user_id={user_id}&k={k}`: Get personalized experience recommendations
+  - `user_id`: The user's UUID (required)
+  - `k`: Number of recommendations (1-20, default 5)
+- `GET /health`: Health check endpoint
+- `GET /docs`: Interactive API documentation (Swagger UI)
+
+### Example API Usage
+
+```bash
+# Get 5 recommendations for a user
+curl "http://localhost:8000/suggested?user_id=123e4567-e89b-12d3-a456-426614174000&k=5"
+
+# Get 10 recommendations for a user
+curl "http://localhost:8000/suggested?user_id=123e4567-e89b-12d3-a456-426614174000&k=10"
+```
 
 ### Running the CLI
 
-You can also interact with the agent through the command line:
+You can also interact with the recommendation system through the command line:
 
 ```bash
 python main.py
 ```
 
+This will prompt you for a user_id and display recommended experiences.
+
 ## Project Structure
 
 ```
 .
-├── api_server.py         # FastAPI application
-├── main.py               # Core logic for the RAG agent
-├── tools.py              # Helper functions for external APIs (Groq, DDG, Wikipedia)
-├── perplexity_llm.py     # (Not fully integrated) Perplexity API integration
+├── api_server.py         # FastAPI application with recommendation endpoints
+├── main.py               # Core recommendation logic using Groq LLM
+├── tools.py              # Helper functions for Groq API integration
+├── perplexity_llm.py     # LangChain wrapper for Groq LLM
 ├── requirements.txt      # Project dependencies
-└── slash/                  # Virtual environment
+├── render.yaml          # Render deployment configuration
+└── slash/               # Virtual environment
 ```
 
 ## Dependencies
 
 The main dependencies are listed in `requirements.txt` and include:
 
-- `fastapi`: For the web server.
-- `uvicorn`: For running the FastAPI server.
-- `qdrant-client`: For interacting with the Qdrant vector database.
-- `openai`: For using Azure OpenAI embeddings.
-- `supabase`: For database interactions.
-- `python-dotenv`: For managing environment variables.
-- `groq`: For accessing the Groq API.
+- `fastapi`: For the web server
+- `uvicorn`: For running the FastAPI server
+- `supabase`: For database interactions
+- `python-dotenv`: For managing environment variables
+- `groq`: For accessing the Groq API
+- `requests`: For HTTP requests
+- `langchain-core`: For LLM integration
+
+## Deployment
+
+The project includes a `render.yaml` file for easy deployment on Render. The service is configured to run on port 10000.
 
 ## License
 
