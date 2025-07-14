@@ -1,11 +1,11 @@
 # Slash Suggested For You
 
-This project is an AI-powered experience recommendation system that suggests personalized experiences to users based on their wishlist and viewing history. It uses Groq's LLM to analyze user preferences and find semantically similar experiences, providing intelligent recommendations through a FastAPI server.
+This project is an AI-powered experience recommendation system that suggests personalized experiences to users based on their wishlist and liked experiences. It uses Groq's LLM to analyze user preferences and find semantically similar experiences, providing intelligent recommendations through a FastAPI server.
 
 ## Features
 
 - **AI-Powered Recommendations**: Uses Groq's LLM to analyze user preferences and find semantically similar experiences
-- **Personalized Suggestions**: Provides experience recommendations based on user's wishlist and viewing history
+- **Personalized Suggestions**: Provides experience recommendations based on user's wishlist and liked experiences
 - **Smart Tag Matching**: Uses LLM to find semantically similar tags and categories
 - **FastAPI Server**: Exposes the recommendation functionality through a RESTful API
 - **Supabase Integration**: Connects to Supabase database for user data and experience information
@@ -13,8 +13,8 @@ This project is an AI-powered experience recommendation system that suggests per
 
 ## How It Works
 
-1. **User History Analysis**: Analyzes the user's wishlisted and viewed experiences
-2. **Tag Extraction**: Extracts relevant tags and categories from user's experience history
+1. **User History Analysis**: Analyzes the user's wishlisted and liked experiences
+2. **Tag Extraction**: Extracts relevant tags from user's experience history
 3. **Semantic Matching**: Uses Groq LLM to find semantically similar tags and experiences
 4. **Intelligent Ranking**: Ranks experiences by relevance to user preferences using AI
 5. **Personalized Results**: Returns top-k most relevant experiences, excluding already seen ones
