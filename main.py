@@ -150,8 +150,11 @@ def get_suggested_experiences(user_id, k=5):
         ranking_prompt = f"""
         Given the user's preferred tags: {list(user_tags)}
         
-        Rank these experiences by relevance to the user's preferences:
-        {[f"{i+1}. {exp['title']} (Category: {exp.get('category', 'N/A')}, Niche: {exp.get('niche_category', 'N/A')})" for i, exp in enumerate(candidates[:20])]}
+        Rank these experiences by relevance to the user's preferences, considering both category, niche, and tags overlap:
+        {[
+            f"{i+1}. {exp['title']} (Category: {exp.get('category', 'N/A')}, Niche: {exp.get('niche_category', 'N/A')}, Tags: {exp.get('tags', 'N/A')})"
+            for i, exp in enumerate(candidates[:20])
+        ]}
         
         Return only the numbers of the top {k} most relevant experiences, separated by commas.
         """
